@@ -2,6 +2,8 @@
 
 ClearSearch is a powerful and flexible search engine for Ruby on Rails applications that supports multiple databases (SQLite, PostgreSQL, and MySQL).
 
+**Note**: This was heavily inspired by the Active Record Search announcement, and I was curious about how I would build something like it. ~May~ Will for sure be dragons lurking. Test Heavily before using in production. Optimizations welcome.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -57,26 +59,12 @@ Search through all indexed fields:
 Post.search "announcement"
 ```
 
-#### Exact Search
-
-Use `%s{"term"}` syntax for exact matching:
-
-```ruby
-Post.search %s{"announcement"}
-```
-
 #### Field-Specific Search
 
 Search specific fields:
 
 ```ruby
-Post.search title: "announcement", content: "solid search"
-```
-
-You can also use exact matching for specific fields:
-
-```ruby
-Post.search title: %s{"announcement"}
+Post.search title: "announcement", content: "clear search"
 ```
 
 ### Chaining
