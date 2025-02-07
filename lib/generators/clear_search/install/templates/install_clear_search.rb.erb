@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+class InstallClearSearch < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :clear_search_indices do |t|
+      t.string :record_type, null: false
+      t.string :field, null: false
+      t.timestamps
+
+      t.index [:record_type, :field], unique: true
+    end
+
+    create_table :clear_search_terms do |t|
+      t.references :index, null: false, foreign_key: { to_table: :clear_search_indices }
+      t.string :text, null: false
+      t.string :analyzer, null: false, default: 'standard'
+      t.timestamps
+
+      t.index [:index_id, :text, :analyzer], unique: true
+      t.index :text
+    end
+
+    create_table :clear_search_occurrences do |t|
+      t.references :term, null: false, foreign_key: { to_table: :clear_search_terms }
+      t.references :index, null: false, foreign_key: { to_table: :clear_search_indices }
+      t.references :record, polymorphic: true, null: false
+      t.integer :position, null: false, default: 0
+      t.timestamps
+
+      t.index [:term_id, :record_type, :record_id, :index_id], unique: true, name: 'idx_clear_search_occurrences_uniqueness'
+      t.index [:record_type, :record_id], name: 'idx_clear_search_occurrences_record'
+    end
+  end
+end
